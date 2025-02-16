@@ -39,13 +39,13 @@ public class Users {
         this.email = email;
     }
 
-    private String telephone;
+    private Integer telephone;
 
-    public String getTelephone() {
+    public Integer getTelephone() {
         return telephone;
     }
 
-    public void setTelephone(String telephone) {
+    public void setTelephone(Integer telephone) {
         this.telephone = telephone;
     }
 

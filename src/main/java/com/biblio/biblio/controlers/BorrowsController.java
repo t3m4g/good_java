@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+// import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.Date;
+
 
 import com.biblio.biblio.models.Books;
 import com.biblio.biblio.models.Borrows;
@@ -45,6 +47,10 @@ public class BorrowsController {
         model.addAttribute("borrows", borrows);
         model.addAttribute("users", users);
         model.addAttribute("books", books);
+
+        // Ajouter la date d'aujourd'hui
+        Date today = new Date();
+        model.addAttribute("today", today);
         return "emprunts";
     }
 
@@ -96,9 +102,9 @@ public class BorrowsController {
      */
     @PostMapping("/emprunts/change/{id}")
     public String editBorrow(@PathVariable Integer id,
-                            @RequestParam("user_id") Integer userId,
-                            @RequestParam("book_id") Integer bookId,
-                            @RequestParam("dateEmprunt") String dateEmprunt,
+                            // @RequestParam("user_id") Integer userId,
+                            // @RequestParam("book_id") Integer bookId,
+                            // @RequestParam("dateEmprunt") String dateEmprunt,
                             @RequestParam("dateRetour") String dateRetour,
                             @RequestParam("statut") Boolean statut,
                             RedirectAttributes redirectAttributes) {
@@ -113,17 +119,17 @@ public class BorrowsController {
         Borrows existingBorrow = optionalBorrow.get();
 
         // Vérification que l'utilisateur et le livre existent
-        Optional<Users> userOpt = usersRepository.findById(userId);
-        Optional<Books> bookOpt = booksRepository.findById(bookId);
+        Optional<Users> userOpt = usersRepository.findById(existingBorrow.getUser().getId());
+        Optional<Books> bookOpt = booksRepository.findById(existingBorrow.getBook().getId());
 
         if (userOpt.isPresent() && bookOpt.isPresent()) {
             Users user = userOpt.get();
             Books book = bookOpt.get();
 
             // Mise à jour des informations de l'emprunt
-            existingBorrow.setUser(user);
-            existingBorrow.setBook(book);
-            existingBorrow.setDateEmprunt(LocalDate.parse(dateEmprunt));
+            // existingBorrow.setUser(user);
+            // existingBorrow.setBook(book);
+            // existingBorrow.setDateEmprunt(existingBorrow.getDateEmprunt());
             existingBorrow.setDateRetour(LocalDate.parse(dateRetour));
             existingBorrow.setStatut(statut);
 

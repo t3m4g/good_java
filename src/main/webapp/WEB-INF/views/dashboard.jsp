@@ -40,7 +40,7 @@
             <li class="nav-item"><a class="nav-link" href="/livres">Livres</a></li>
             <li class="nav-item"><a class="nav-link" href="/emprunts">Emprunts</a></li>
             <li class="nav-item">
-              <a class="nav-link" href="/utilisateurs">Utilisateur</a>
+              <a class="nav-link" href="/utilisateurs">Utilisateurs</a>
             </li>
           </ul>
         </div>

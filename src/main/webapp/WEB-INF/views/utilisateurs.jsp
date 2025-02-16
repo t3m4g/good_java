@@ -40,7 +40,7 @@
             <li class="nav-item"><a class="nav-link" href="/livres">Livres</a></li>
             <li class="nav-item"><a class="nav-link" href="/emprunts">Emprunts</a></li>
             <li class="nav-item">
-              <a class="nav-link active" href="/utilisateurs">Utilisateur</a>
+              <a class="nav-link active" href="/utilisateurs">Utilisateurs</a>
             </li>
           </ul>
         </div>
@@ -85,7 +85,7 @@
                                         <!-- Téléphone -->
                                         <div class="mb-3">
                                             <label for="telephone" class="form-label">Téléphone</label>
-                                            <input type="tel" class="form-control" id="telephone" name="telephone" required>
+                                            <input type="number" class="form-control" id="telephone" name="telephone" required>
                                         </div>
                                         <!-- Boutons -->
                                         <div class="modal-footer">
@@ -159,7 +159,7 @@
 
                                                 <div class="mb-3">
                                                     <label for="telephone${utilisateur.id}" class="form-label">Téléphone</label>
-                                                    <input type="text" class="form-control" id="telephone${utilisateur.id}" name="telephone" value="${utilisateur.telephone}" required>
+                                                    <input type="number" class="form-control" id="telephone${utilisateur.id}" name="telephone" value="${utilisateur.telephone}" required>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

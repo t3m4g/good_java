@@ -71,6 +71,7 @@
                                 <div class="mb-3">
                                     <label for="userId" class="form-label">Utilisateur</label>
                                     <select class="form-control" id="userId" name="user_id" required>
+                                      <option value="${0}">Choisir un utilisateur</option>
                                         <c:forEach items="${users}" var="user">
                                             <option value="${user.id}">${user.name}</option>
                                         </c:forEach>
@@ -80,8 +81,11 @@
                                 <div class="mb-3">
                                     <label for="bookId" class="form-label">Livre</label>
                                     <select class="form-control" id="bookId" name="book_id" required>
+                                      <option value="${0}">Choisir un livre</option>
                                         <c:forEach items="${books}" var="book">
-                                            <option value="${book.id}">${book.title}</option>
+                                            <c:if test="${book.disponibility}"> <!-- Vérifie si le livre est disponible -->
+                                                <option value="${book.id}">${book.title}</option>
+                                            </c:if>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -108,39 +112,73 @@
             
             <!-- Tableau des emprunts -->
             <div class="row border border-1 p-2 py-3 rounded-2">
+                <h4 class="mb-3">Listes des emprunts</h4>
                 <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">N°</th>
-                            <th scope="col">Date d'emprunt</th>
-                            <th scope="col">Date de retour</th>
-                            <th scope="col">Statut</th>
-                            <th scope="col">Utilisateur</th>
-                            <th scope="col">Livre</th>
-                            <th scope="col" class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${borrows}" var="borrow" varStatus="status">
+                  <thead class="table-dark">
+                      <tr>
+                          <th scope="col">N°</th>
+                          <th scope="col">Date d'emprunt</th>
+                          <th scope="col">Date de retour</th>
+                          <th scope="col">Statut</th>
+                          <th scope="col">Utilisateur</th>
+                          <th scope="col">Livre</th>
+                          <th scope="col" class="text-center">Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <c:forEach items="${borrows}" var="borrow" varStatus="status">
+                          <c:if test="${borrow.statut}"> <!-- Vérifie si l'emprunt est en cours -->
+                              <tr>
+                                  <td>${status.index + 1}</td>
+                                  <td>${borrow.dateEmprunt}</td>
+                                  <td>${borrow.dateRetour}</td>
+                                  <td>${borrow.statut ? 'En cours' : 'Terminé'}</td>
+                                  <td>${borrow.user.name}</td>
+                                  <td>${borrow.book.title}</td>
+                                  <td class="text-center">
+                                      <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalModifier${borrow.id}">
+                                          <i class="bi bi-pencil"></i>
+                                      </button>
+                                      <!-- Bouton de suppression (optionnel) -->
+                                      <%-- <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalSupprimer${borrow.id}">
+                                          <i class="bi bi-trash"></i>
+                                      </button> --%>
+                                  </td>
+                              </tr>
+                          </c:if>
+                      </c:forEach>
+                  </tbody>
+              </table>
+
+
+                <!-- Tableau des emprunts terminés -->
+                <div class="row border border-1 p-2 py-3 rounded-2 mt-4">
+                    <h4 class="mb-3">📚 Emprunts Terminés</h4>
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
                             <tr>
-                                <td>${status.index + 1}</td>
-                                <td>${borrow.dateEmprunt}</td>
-                                <td>${borrow.dateRetour}</td>
-                                <td>${borrow.statut}</td>
-                                <td>${borrow.user.name}</td>
-                                <td>${borrow.book.title}</td>
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalModifier${borrow.id}">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalSupprimer${borrow.id}">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
+                                <th scope="col">N°</th>
+                                <th scope="col">Date d'emprunt</th>
+                                <th scope="col">Date de retour</th>
+                                <th scope="col">Utilisateur</th>
+                                <th scope="col">Livre</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${borrows}" var="borrow" varStatus="status">
+                                <c:if test="${not borrow.statut}"> <!-- Vérifie si l'emprunt est terminé -->
+                                    <tr>
+                                        <td>${status.index + 1}</td>
+                                        <td>${borrow.dateEmprunt}</td>
+                                        <td>${borrow.dateRetour}</td>
+                                        <td>${borrow.user.name}</td>
+                                        <td>${borrow.book.title}</td>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
                 
                 <!-- Modales pour chaque emprunt -->
                 <c:forEach items="${borrows}" var="borrow">
@@ -157,7 +195,7 @@
                                         <!-- Utilisateur -->
                                         <div class="mb-3">
                                             <label for="userId${borrow.id}" class="form-label">Utilisateur</label>
-                                            <select class="form-control" id="userId${borrow.id}" name="user_id" required>
+                                            <select disabled class="form-control" id="userId${borrow.id}" name="user_id" required>
                                                 <c:forEach items="${users}" var="user">
                                                     <option value="${user.id}" <c:if test="${user.id == borrow.user.id}">selected</c:if>>${user.name}</option>
                                                 </c:forEach>
@@ -166,7 +204,7 @@
                                         <!-- Livre -->
                                         <div class="mb-3">
                                             <label for="bookId${borrow.id}" class="form-label">Livre</label>
-                                            <select class="form-control" id="bookId${borrow.id}" name="book_id" required>
+                                            <select disabled class="form-control" id="bookId${borrow.id}" name="book_id" required>
                                                 <c:forEach items="${books}" var="book">
                                                     <option value="${book.id}" <c:if test="${book.id == borrow.book.id}">selected</c:if>>${book.title}</option>
                                                 </c:forEach>
@@ -175,7 +213,7 @@
                                         <!-- Date d'emprunt -->
                                         <div class="mb-3">
                                             <label for="dateEmprunt${borrow.id}" class="form-label">Date d'emprunt</label>
-                                            <input type="date" class="form-control" id="dateEmprunt${borrow.id}" name="dateEmprunt" value="${borrow.dateEmprunt}" required>
+                                            <input disabled type="date" class="form-control" id="dateEmprunt${borrow.id}" name="dateEmprunt" value="${borrow.dateEmprunt}" required>
                                         </div>
                                         <!-- Date de retour -->
                                         <div class="mb-3">
