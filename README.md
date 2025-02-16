@@ -38,10 +38,9 @@ Avant d'exécuter le projet, assurez-vous d'avoir installé :
 
 ## 🛠️ 3. Configurer la Base de Données
 ```
-spring.datasource.url=jdbc:postgresql://localhost:5432/bibliotheque
-spring.datasource.username=postgres
-spring.datasource.password=motdepasse
-spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://localhost:3306/app_jpa
+spring.datasource.username=root
+
 ```
 
 ## ▶️ 4. Exécuter l'Application
